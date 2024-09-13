@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+echo "**** Setting up wghealth ****"
+ln -s /etc/s6-overlay/s6-rc.d/init-mod-wireguard-wghealth-install/bin/wghealth /usr/bin/wghealth
+echo "**** Done ****"

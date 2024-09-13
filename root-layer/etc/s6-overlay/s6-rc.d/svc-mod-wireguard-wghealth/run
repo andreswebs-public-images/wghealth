@@ -1,4 +1,4 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-exec s6-setuidgid abc wghealth
+exec s6-applyuidgid -u $(id -u abc) -g $(id -g abc) wghealth

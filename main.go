@@ -46,9 +46,9 @@ func main() {
 	} else {
 		http.HandleFunc("/", healthCheckHandler(*device))
 		addr := fmt.Sprintf(":%d", *port)
-		log.Printf("Listening on %s\n", addr)
+		log.Printf("[wghealth] listening on %s\n", addr)
 		if err := http.ListenAndServe(addr, nil); err != nil {
-			log.Printf("Error starting server: %v\n", err)
+			log.Printf("[wghealth] error starting server: %v\n", err)
 		}
 	}
 }
@@ -91,6 +91,6 @@ func healthCheckHandler(device string) http.HandlerFunc {
 func handleExitSignal(exitSignal chan os.Signal) {
 	<-exitSignal
 	fmt.Println()
-	log.Println("Received termination signal. Shutting down...")
+	log.Println("[wghealth] received termination signal - shutting down")
 	os.Exit(0)
 }

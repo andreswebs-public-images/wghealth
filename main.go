@@ -12,13 +12,17 @@ import (
 	"syscall"
 )
 
+func init() {
+	log.SetFlags(0)
+}
+
 func main() {
 	exitSignal := make(chan os.Signal, 1)
 	signal.Notify(exitSignal, syscall.SIGINT, syscall.SIGTERM)
 	go handleExitSignal(exitSignal)
 
 	defaultDevice := "wg0"
-	defaultPort := 8080
+	defaultPort := 9000
 
 	envDevice, ok := os.LookupEnv("WGHEALTH_DEVICE")
 	if ok {
@@ -77,7 +81,7 @@ func healthCheckHandler(device string) http.HandlerFunc {
 		if check(device) {
 			w.WriteHeader(http.StatusOK)
 			w.Header().Set("Content-Type", "text/plain")
-			w.Write([]byte("healthy\n"))
+			w.Write([]byte("OK\n"))
 		} else {
 			http.Error(w, "Not Found", http.StatusNotFound)
 		}

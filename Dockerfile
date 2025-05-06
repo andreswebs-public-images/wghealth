@@ -1,23 +1,25 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.23 AS build
+FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS build
 
-ARG TARGETOS="linux"
-ARG TARGETARCH="amd64"
-ARG GOPROXY="https://proxy.golang.org"
+WORKDIR /build
+COPY src/go.mod .
+COPY src/go.sum .
+RUN go mod download
+COPY src/ ./
 
-ENV GOARCH="${TARGETARCH}"
-ENV GOOS="${TARGETOS}"
-ENV GOPROXY="${GOPROXY}"
 ENV OUT_DIR="/root-layer/etc/s6-overlay/s6-rc.d/init-mod-wireguard-wghealth-install/bin"
 ENV APP_NAME="wghealth"
 
-WORKDIR /src
-COPY go.mod .
-COPY main.go .
 COPY root-layer/ /root-layer/
 RUN mkdir --parents "${OUT_DIR}"
-RUN CGO_ENABLED=0 go build -a -o "${OUT_DIR}/${APP_NAME}" .
+
+ARG TARGETOS TARGETARCH
+ENV GOOS=$TARGETOS
+ENV GOARCH=$TARGETARCH
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    --mount=type=cache,target=/go/pkg \
+    CGO_ENABLED=0 go build -a -o "${OUT_DIR}/${APP_NAME}" .
 
 FROM scratch
 LABEL maintainer=andreswebs@pm.me

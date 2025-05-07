@@ -3,6 +3,8 @@ name: docker.io
 
 on:
 
+  workflow_dispatch:
+
   push:
     branches:
       - main

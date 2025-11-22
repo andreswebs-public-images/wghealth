@@ -8,4 +8,4 @@ A [Docker Mod](https://github.com/linuxserver/docker-mods) for the [linuxserver/
 
 ## License
 
-This project is licensed under the [Unlicense](UNLICENSE.md).
+This project is licensed under the [Unlicense](UNLICENSE).
